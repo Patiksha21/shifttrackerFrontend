@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KavyaShift – TL Employees</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="assets/style.css">
+<style>
+    .tl-row { cursor: pointer; }
+    .employee-list { display: none; margin-top: 5px; }
+    .employee-item { padding: 5px 10px; border-bottom: 1px solid #eee; }
+    .employee-item:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<div class="container-fluid page-bg">
+    <div class="row">
+        <!-- Sidebar --> 
+        <div class="col-2 sidebar">
+            <div class="logo mt-5 ms-3">
+                <img src="assets/img/kipl.png" class="logo-img" width="200px">
+            </div>
+            <div class="menu mt-5">
+                <button class="menu-item" onclick="window.location.href='admin.html'">
+                    <i class="fa-regular fa-circle-dot me-2"></i>Dashboard
+                </button>
+                
+                <button class="menu-item active" onclick="window.location.href='submissive.html'">
+                    <i class="fa-regular fa-file me-2"></i>Team Leader
+                </button>
+                <button class="menu-item" onclick="window.location.href='archive.html'">
+                    <i class="fa-regular fa-folder me-2"></i>History
+                </button>
+            </div>
+           <div class="settings" onclick="openSettings()">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+           </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-10">
+            <h3 class="mt-4 ms-4 fw-bold">Team Leader – Employees Overview</h3>
+
+            <div class="table-wrapper mx-4 mt-3 p-3">
+                <table class="table table-bordered" id="tlTable">
+                    <thead>
+                        <tr>
+                            <th>TL Name</th>
+                            <th>Total Employees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JS will populate -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:8080/api/tl";
+
+// Fetch TL data with JWT token
+async function fetchTLData() {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Not logged in or token expired!");
+            window.location.href = "index.html";
+            return [];
+        }
+
+        const response = await fetch(`${API_BASE}/employees`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // ✅ Include token
+            }
+        });
+
+        if (response.status === 403) {
+            alert("You do not have permission to access this page!");
+            window.location.href = "index.html";
+            return [];
+        }
+
+        if (!response.ok) throw new Error("Failed to fetch TL data");
+
+        const data = await response.json();
+        return data; // array of TLs with employees
+    } catch (err) {
+        console.error("Error fetching TL data:", err);
+        return [];
+    }
+}
+
+function renderTLTable(tlData) {
+    const tbody = document.querySelector("#tlTable tbody");
+    tbody.innerHTML = "";
+
+    tlData.forEach(tl => {
+        const tr = document.createElement("tr");
+        tr.classList.add("tl-row");
+        tr.innerHTML = `<td>${tl.fullName || tl.name}</td><td>${tl.employees?.length || 0}</td>`;
+        tbody.appendChild(tr);
+
+        // Employee details row
+        const empTr = document.createElement("tr");
+        const empTd = document.createElement("td");
+        empTd.setAttribute("colspan", 2);
+
+        let empTable = `
+            <table class="table table-bordered employee-list" style="margin:0; display:none;">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Login</th>
+                        <th>Logout</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tl.employees?.map(emp => `
+                        <tr>
+                            <td>${emp.fullName || emp.name}</td>
+                            <td>${emp.login || "N/A"}</td>
+                            <td>${emp.logout || "N/A"}</td>
+                            <td>${emp.duration || "N/A"}</td>
+                            <td>${emp.status || "Pending"}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            </table>
+        `;
+
+        empTd.innerHTML = empTable;
+        empTr.appendChild(empTd);
+        tbody.appendChild(empTr);
+
+        // Toggle employee table on TL row click
+        tr.addEventListener("click", () => {
+            const list = empTd.querySelector(".employee-list");
+            list.style.display = list.style.display === "table" ? "none" : "table";
+        });
+    });
+}
+
+// Fetch and render TL table on page load
+fetchTLData().then(data => renderTLTable(data));
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+
+// Live Clock
+function updateClock() {
+    const clockEl = document.querySelector('.time');
+    if (!clockEl) return;
+    const now = new Date();
+    let h = now.getHours();
+    let m = now.getMinutes();
+    let ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12; h = h ? h : 12;
+    m = m < 10 ? "0" + m : m;
+    clockEl.innerHTML = `<i class="fa-regular fa-clock me-1"></i>${h}:${m} ${ampm}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function openSettings() {
+    window.location.href = "settings.html";
+}
+</script>
+
+</body>
+</html>

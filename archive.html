@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KavyaShift – Archive Logs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="container-fluid page-bg">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <div class="col-2 sidebar">
+            <div class="logo mt-5 ms-3">
+                <img src="assets/img/kipl.png" class="logo-img" width="200px">
+            </div>
+            <div class="menu mt-5">
+                <button class="menu-item" onclick="window.location.href='admin.html'">
+                    <i class="fa-regular fa-circle-dot me-2"></i>Dashbord
+                </button>
+                
+                <button class="menu-item " onclick="window.location.href='submissive.html'">
+                    <i class="fa-regular fa-file me-2"></i>Team Leader
+                </button>
+                <button class="menu-item active" onclick="window.location.href='archive.html'">
+                    <i class="fa-regular fa-folder me-2"></i>History
+                </button>
+            </div>
+
+            <div class="settings" onclick="openSettings()">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+            </div>
+
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="col-10">
+
+            <h3 class="mt-4 ms-4 fw-bold">Archive – Employee History</h3>
+
+            <!-- FILTER BOX -->
+            <div class="filter-box mt-4 p-3 mx-4">
+                <div class="row">
+                    <div class="col-3">
+                        <label class="form-label">From Date</label>
+                        <input type="date" id="fromDate" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">To Date</label>
+                        <input type="date" id="toDate" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">Employee</label>
+                        <input type="text" id="filterName" class="form-control" placeholder="Search employee">
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary w-100 mt-4" onclick="applyArchiveFilter()">Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-wrapper mx-4 mt-3 p-3">
+                <table class="table align-middle" id="archiveTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Employee</th>
+                            <th>Login</th>
+                            <th>Logout</th>
+                            <th>Active Duration</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows added by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const BACKEND_URL = "http://localhost:8080";
+    const tableBody = document.querySelector("#archiveTable tbody");
+
+    const token = localStorage.getItem("token"); // ⬅ GET STORED TOKEN
+    if (!token) {
+        alert("Unauthorized! Please login again.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // =============================
+    // FETCH ARCHIVE DATA (WITH JWT)
+    // =============================
+    async function fetchArchiveData(fromDate = '', toDate = '', employeeName = '') {
+        try {
+            let url = `${BACKEND_URL}/api/admin/sessions/archive?`;
+            if(fromDate) url += `fromDate=${fromDate}&`;
+            if(toDate) url += `toDate=${toDate}&`;
+            if(employeeName) url += `employeeName=${encodeURIComponent(employeeName)}&`;
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token   // ⬅ JWT HERE
+                }
+            });
+
+            if(!response.ok) throw new Error("Failed to fetch archive data");
+
+            return await response.json();
+
+        } catch (error) {
+            console.error(error);
+            alert("Error fetching archive data.");
+            return [];
+        }
+    }
+
+    // =============================
+    // RENDER TABLE
+    // =============================
+    function loadArchiveTable(data){
+        tableBody.innerHTML = "";
+
+        if(data.length === 0){
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+            return;
+        }
+
+        data.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${row.date}</td>
+                <td>${row.user?.fullName || row.employee}</td>
+                <td>${row.login}</td>
+                <td>${row.logout}</td>
+                <td>${row.duration}</td>
+                <td>
+                  <span class="badge ${row.status === 'Completed' ? 'bg-success' : 'bg-warning'}">
+                    ${row.status}
+                  </span>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // INITIAL LOAD
+    fetchArchiveData().then(loadArchiveTable);
+
+    // FILTER APPLY
+    window.applyArchiveFilter = async function(){
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const name = document.getElementById("filterName").value;
+
+        const filtered = await fetchArchiveData(from, to, name);
+        loadArchiveTable(filtered);
+    };
+
+    // EXPORT TO EXCEL
+    window.exportArchive = function(){
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const name = document.getElementById("filterName").value;
+
+        let url = `${BACKEND_URL}/api/admin/export/excel?`;
+        if(from) url += `fromDate=${from}&`;
+        if(to) url += `toDate=${to}&`;
+        if(name) url += `employeeName=${encodeURIComponent(name)}&`;
+
+        window.open(url, "_blank");
+    };
+
+});
+
+// OPEN SETTINGS
+function openSettings() {
+    window.location.href = "settings.html";
+}
+</script>
+
+</body>
+</html>

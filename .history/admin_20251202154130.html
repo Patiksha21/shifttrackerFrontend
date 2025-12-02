@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>KavyaShift – Live Employee Tracking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<style>
+    .badge-admin {
+        background-color: #dc3545 !important;
+    }
+
+    .badge-tl {
+        background-color: #0d6efd !important;
+    }
+
+    .badge-employee {
+        background-color: #198754 !important;
+    }
+</style>
+
+<body>
+
+    <div class="container-fluid page-bg">
+        <div class="row">
+
+            <!-- =============== SIDEBAR =============== -->
+            <div class="col-2 sidebar">
+                <div class="logo mt-5 ms-3">
+                    <img src="assets/img/kipl.png" class="logo-img" width="200px">
+                </div>
+
+                <div class="menu mt-5">
+                    <button class="menu-item active" onclick="window.location.href='admin.html'">
+                        <i class="fa-regular fa-circle-dot me-2"></i>Dashboard
+                    </button>
+
+                    <button class="menu-item" onclick="window.location.href='submissive.html'">
+                        <i class="fa-regular fa-file me-2"></i>Team Leader
+                    </button>
+
+                    <button class="menu-item" onclick="window.location.href='archive.html'">
+                        <i class="fa-regular fa-folder me-2"></i>History
+                    </button>
+                </div>
+
+                <div class="settings" onclick="window.location.href='settings.html'">
+                    <i class="fa-solid fa-gear me-2"></i> Settings
+                </div>
+
+            </div>
+
+            <!-- =============== MAIN CONTENT =============== -->
+            <div class="col-10">
+
+                <!-- TOP BAR -->
+                <div class="d-flex justify-content-end align-items-center mt-3 pe-4">
+                    <div class="time me-4" id="liveTime">
+                        <i class="fa-regular fa-clock me-1"></i>09:00 AM
+                    </div>
+
+                    <button class="btn btn-primary me-2 px-4 btn-export" onclick="exportCsv()">Export CSV</button>
+                    <button class="btn btn-primary me-2 px-4 btn-export" onclick="exportExcel()">Export Excel</button>
+                    <button class="btn btn-danger px-4" onclick="logout()">Logout</button>
+                </div>
+
+                <!-- TITLE -->
+                <h3 class="mt-4 ms-4 fw-bold">Live Employee Tracking</h3>
+
+                <!-- ADD FORM -->
+                <div class="add-form mt-2 p-4 mx-4">
+                    <h4>Add New Employee</h4>
+
+                    <div class="row mt-3 align-items-center">
+                        <div class="col-2">
+                            <input type="text" id="empId" placeholder="Employee ID" class="form-control">
+                        </div>
+
+                        <div class="col-3">
+                            <input type="text" id="empName" placeholder="Employee Name" class="form-control">
+                        </div>
+
+                        <div class="col-2">
+                            <input type="password" id="password" placeholder="Password" class="form-control">
+                        </div>
+
+                        <div class="col-3">
+                            <select id="selectRole" class="form-control" required>
+                                <option value="">Loading...</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-2">
+                            <button class="btn btn-success w-120" id="addBtn">Add Employee</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div class="table-wrapper mx-4 mt-3 p-3">
+                    <table class="table align-middle" id="employeeTable">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Login Time</th>
+                                <th>Active Duration</th>
+                                <th>Status</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="empTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-end pe-4">
+                    <button class="btn btn-primary mt-3 px-4 btn-view-report"
+                        onclick="window.location.href='report.html'">
+                        View Reports
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_URL = "http://localhost:8080/api/admin";
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            alert("You are not logged in");
+            window.location.href = "index.html";
+        }
+
+        function getAuthHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            };
+        }
+
+        // ===================== LIVE TIME =====================
+        function updateTime() {
+            const now = new Date();
+            let h = now.getHours();
+            let m = now.getMinutes();
+            let s = now.getSeconds();
+            let ampm = h >= 12 ? "PM" : "AM";
+            h = h % 12 || 12;
+            m = m < 10 ? "0" + m : m;
+            s = s < 10 ? "0" + s : s;
+            document.getElementById("liveTime").innerHTML = `<i class="fa-regular fa-clock me-1"></i>${h}:${m}:${s} ${ampm}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // ===================== HELPER =====================
+        async function handleResponse(res) {
+            if (!res.ok) {
+                let msg = await res.text();
+                if (!msg) msg = res.statusText;
+                throw new Error(`Error ${res.status}: ${msg}`);
+            }
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                return res.json();
+            }
+            return res.text();
+        }
+
+        // ===================== LOAD EMPLOYEES =====================
+        async function loadEmployees() {
+            try {
+                const token = localStorage.getItem("token");
+
+                const res = await fetch("http://localhost:8080/api/admin/users", {
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                await handleResponse(res);  // this throws errors properly
+                const data = await res.json();
+
+                console.log("Employees:", data);
+                return data;
+
+            } catch (err) {
+                console.error(err);
+                alert("Error loading employees: " + err.message);
+            }
+        }
+
+
+
+
+
+
+        let backendRoles = []; // global variable
+
+        async function loadEmpDropdown() {
+            try {
+                const res = await fetch("http://localhost:8080/api/auth/roles");
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch roles, Status: " + res.status);
+                }
+
+                backendRoles = await res.json();   // Save the roles list
+                console.log("Loaded roles:", backendRoles);
+
+                const selectRole = document.getElementById("selectRole");
+                selectRole.innerHTML = '<option value="">Select Role</option>';
+
+                backendRoles.forEach(role => {
+                    const option = document.createElement("option");
+                    option.value = role.id;         // role id as value
+                    option.textContent = role.name; // Display text
+                    selectRole.appendChild(option);
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("Unable to load roles: " + err.message);
+            }
+        }
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            loadEmpDropdown();
+        });
+
+        // ===================== ADD EMPLOYEE =====================
+        document.getElementById("addBtn").addEventListener("click", async function () {
+            window.alert('Aadd button click')
+            const empName = document.getElementById("empName").value.trim();
+            const empId = document.getElementById("empId").value.trim();
+            const password = document.getElementById("password").value.trim();
+            // const role = document.getElementById("role").value;
+
+            // console.log(empName, empId, password, role)
+
+            if (!empName || !empId || !password) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            // const roleMap = { "Admin": 1, "TL": 2, "Employee": 3 };
+
+            const selectedRoleId = document.getElementById("selectRole").value;
+
+            const employeeData = {
+                fullName: empName,
+                email: empId + "@kavyainfoweb.com",
+                password: password,
+                active: true,
+                role: { id: selectedRoleId },   // <-- directly sending backend id
+                teamId: null,
+                status: "OFFLINE"
+            };
+
+            console.log(employeeData)
+            try {
+                await addEmployee(employeeData);
+                alert("Employee Added Successfully!");
+                loadEmployees();
+                document.getElementById("empName").value = "";
+                document.getElementById("empId").value = "";
+                document.getElementById("password").value = "";
+
+            } catch (err) {
+                console.error(err);
+                alert("Failed to add employee: " + err.message);
+            }
+        });
+
+        // ===================== DELETE EMPLOYEE =====================
+        async function handleDelete(id) {
+            if (!confirm("Delete this employee?")) return;
+            try {
+                await deleteEmployee(id);
+                alert("Employee Deleted!");
+                loadEmployees();
+            } catch (err) {
+                console.error(err);
+                alert("Failed to delete employee: " + err.message);
+            }
+        }
+
+        // ===================== LOGOUT =====================
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                localStorage.removeItem("token");
+                window.location.href = "index.html";
+            }
+        }
+
+        // ===================== BACKEND API FUNCTIONS =====================
+        async function addEmployee(employeeData) {
+            const res = await fetch(`${ADMIN_URL}/users`, {
+                method: "POST",
+                headers: getAuthHeaders(),
+                body: JSON.stringify(employeeData)
+            });
+            return handleResponse(res);
+        }
+
+        async function updateEmployee(id, employeeData) {
+            const res = await fetch(`${ADMIN_URL}/users/${id}`, {
+                method: "PUT",
+                headers: getAuthHeaders(),
+                body: JSON.stringify(employeeData)
+            });
+            return handleResponse(res);
+        }
+
+        async function deleteEmployee(id) {
+            const res = await fetch(`${ADMIN_URL}/users/${id}`, {
+                method: "DELETE",
+                headers: getAuthHeaders()
+            });
+            return handleResponse(res);
+        }
+
+        async function getAllUsers() {
+            const res = await fetch(`${ADMIN_URL}/users`, {
+                method: "GET",
+                headers: getAuthHeaders()
+            });
+            return handleResponse(res);
+        }
+
+        async function exportCsv() {
+            const res = await fetch(`${ADMIN_URL}/export/csv`, { method: "GET", headers: getAuthHeaders() });
+            if (!res.ok) { alert("Failed to export CSV: " + res.status); return; }
+            const blob = await res.blob();
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "sessions.csv";
+            link.click();
+        }
+
+        async function exportExcel() {
+            const res = await fetch(`${ADMIN_URL}/export/excel`, { method: "GET", headers: getAuthHeaders() });
+            if (!res.ok) { alert("Failed to export Excel: " + res.status); return; }
+            const blob = await res.blob();
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "sessions.xlsx";
+            link.click();
+        }
+
+        // INITIAL LOAD
+        loadEmployees();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="assets/style.css">
+
+    <style>
+        body {
+            background: #f2f4f8;
+        }
+
+        .settings-page h3 {
+            font-weight: 700;
+        }
+
+        .settings-box {
+            background: #ffffffbb;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-weight: 600;
+            padding: 10px 0;
+            margin-top: 15px;
+            border-bottom: 2px solid #ececec;
+        }
+        /* Sidebar full height */
+.sidebar {
+    height: 100vh;           /* sidebar hamesha viewport height cover karte */
+    position: sticky;         /* scroll hotana pan visible rahate */
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* menu top la, settings bottom la */
+    padding: 20px;
+    background: linear-gradient(180deg, #dfe2e7 0%, #eeeef0 40%, #e2e4e9 100%);
+    border-right: 1px solid #ddd; /* optional */
+}
+.logo-img {
+    width: 150px;
+    height: auto;
+}
+
+.menu {
+    margin-top: 40px;
+}
+
+.menu-item {
+    width: 90%;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #556;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 6px auto;
+    transition: 0.3s;
+}
+
+.menu-item i {
+    margin-right: 10px;
+}
+
+.menu-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.menu-item.active {
+    background: #cdd8f3;
+    color: #000 !important;
+    font-weight: 600;
+}
+
+.menu-item.active i {
+    color: #000 !important;
+}
+
+.settings {
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
+    font-size: 14px;
+    color: #444;
+}
+
+
+/* Content full height */
+.settings-page {
+    min-height: 100vh;  /* ensure content covers full height */
+    padding-left: 30px;
+    padding-top: 30px;
+}
+
+/* Optional: prevent sidebar overlap */
+.container-fluid.page-bg {
+    padding: 0;
+}
+
+
+        /* Dark / Light Theme */
+        body[data-theme="dark"] {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        body[data-theme="dark"] .settings-box {
+            background: #2c2c2c;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<body>
+
+<div class="container-fluid page-bg">
+  <div class="row">
+
+    <!-- =============== SIDEBAR =============== -->
+    <div class="col-12 col-md-2 sidebar bg-white vh-100 p-3">
+      <div class="logo mt-5 text-center">
+        <img src="assets/img/kipl.png" class="logo-img" width="150px">
+      
+
+      <div class="menu mt-5 d-flex flex-column gap-2">
+        <button class="menu-item " onclick="window.location.href='admin.html'">
+          <i class="fa-regular fa-circle-dot me-2"></i>Dashboard
+        </button>
+
+        <button class="menu-item" onclick="window.location.href='submissive.html'">
+          <i class="fa-regular fa-file me-2"></i>Team Leader
+        </button>
+
+        <button class="menu-item" onclick="window.location.href='archive.html'">
+          <i class="fa-regular fa-folder me-2"></i>History
+        </button>
+      </div>
+
+      <div class="settings mt-auto" onclick="openSettings()">
+        <i class="fa-solid fa-gear me-2"></i>Settings
+      </div>
+    </div>
+    </div>
+
+    <!-- =============== SETTINGS CONTENT =============== -->
+    <div class="col-12 col-md-10 p-4 settings-page">
+      <h3 class="mb-4"><i class="fa-solid fa-gear me-2"></i>Settings</h3>
+
+      <div class="settings-box">
+
+        <!-- Profile Settings -->
+        <h5 class="section-title">Profile Settings</h5>
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <label>Name</label>
+            <input type="text" id="setName" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Email</label>
+            <input type="email" id="setEmail" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>New Password</label>
+            <input type="password" id="setPass" class="form-control">
+          </div>
+        </div>
+
+        <!-- Theme Settings -->
+        <h5 class="section-title">Theme Settings</h5>
+        <div class="mb-4">
+          <button class="btn btn-dark me-2" onclick="setTheme('dark')">Dark Mode</button>
+          <button class="btn btn-light border" onclick="setTheme('light')">Light Mode</button>
+        </div>
+
+        <!-- Company Settings -->
+        <h5 class="section-title">Company Settings</h5>
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <label>Company Name</label>
+            <input type="text" id="companyName" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Office Start Time</label>
+            <input type="time" id="startTime" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Office End Time</label>
+            <input type="time" id="endTime" class="form-control">
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <h5 class="section-title">Notifications</h5>
+        <div class="mb-4">
+          <input type="checkbox" id="loginNotify"> Login Notification <br>
+          <input type="checkbox" id="offlineNotify"> Offline Notification <br>
+          <input type="checkbox" id="reportNotify"> Report Notification
+        </div>
+
+        <!-- Data Backup -->
+        <h5 class="section-title">Data & Backup</h5>
+        <button class="btn btn-primary me-2" onclick="exportEmployees()">Export Employees</button>
+        <button class="btn btn-primary me-2" onclick="exportLogs()">Export Logs</button>
+        <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API_URL = "http://localhost:8080/api/settings";
+const token = localStorage.getItem("token");
+
+// ====== Authorization headers ======
+function getAuthHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  };
+}
+
+// ====== Load settings on page load ======
+async function loadSettings() {
+  if (!token) {
+    alert("Please login first!");
+    window.location.href = "index.html";
+    return;
+  }
+
+  try {
+    const res = await fetch(API_URL, { headers: getAuthHeaders() });
+    if (!res.ok) throw new Error("Failed to load settings");
+    const data = await res.json();
+
+    // Fill form fields
+    document.getElementById("setName").value = data.name || "";
+    document.getElementById("setEmail").value = data.email || "";
+    document.getElementById("companyName").value = data.companyName || "";
+    document.getElementById("startTime").value = data.officeStartTime || "";
+    document.getElementById("endTime").value = data.officeEndTime || "";
+    document.getElementById("loginNotify").checked = data.loginNotification || false;
+    document.getElementById("offlineNotify").checked = data.offlineNotification || false;
+    document.getElementById("reportNotify").checked = data.reportNotification || false;
+
+    // Apply theme
+    document.body.setAttribute("data-theme", data.theme || "light");
+    localStorage.setItem("theme", data.theme || "light");
+
+  } catch (err) {
+    console.error(err);
+    alert("Error loading settings: " + err.message);
+  }
+}
+
+// ====== Save / Update settings ======
+async function saveSettings() {
+  const payload = {
+    name: document.getElementById("setName").value,
+    email: document.getElementById("setEmail").value,
+    password: document.getElementById("setPass").value, // optional
+    companyName: document.getElementById("companyName").value,
+    officeStartTime: document.getElementById("startTime").value,
+    officeEndTime: document.getElementById("endTime").value,
+    loginNotification: document.getElementById("loginNotify").checked,
+    offlineNotification: document.getElementById("offlineNotify").checked,
+    reportNotification: document.getElementById("reportNotify").checked,
+    theme: localStorage.getItem("theme") || "light"
+  };
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error("Failed to save settings");
+    const data = await res.json();
+    alert("Settings saved successfully!");
+  } catch (err) {
+    console.error(err);
+    alert("Error saving settings: " + err.message);
+  }
+}
+
+// ====== Theme functions ======
+function setTheme(mode) {
+  localStorage.setItem("theme", mode);
+  document.body.setAttribute("data-theme", mode);
+  saveSettings(); // save theme change automatically
+}
+
+// ====== Export functions ======
+async function exportEmployees() {
+  try {
+    const res = await fetch(`${API_URL}/export/employees`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    downloadFile("employees.json", JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error(err);
+    alert("Error exporting employees: " + err.message);
+  }
+}
+
+async function exportLogs() {
+  try {
+    const res = await fetch(`${API_URL}/export/logs`, { headers: getAuthHeaders() });
+    const data = await res.json();
+    downloadFile("logs.json", JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error(err);
+    alert("Error exporting logs: " + err.message);
+  }
+}
+
+async function clearAllData() {
+  if (!confirm("Are you sure? All data will be erased!")) return;
+  try {
+    const res = await fetch(`${API_URL}/clear`, { method: "DELETE", headers: getAuthHeaders() });
+    const message = await res.text();
+    alert(message);
+    location.reload();
+  } catch (err) {
+    console.error(err);
+    alert("Error clearing data: " + err.message);
+  }
+}
+
+// ====== Utility ======
+function downloadFile(name, content) {
+  const a = document.createElement("a");
+  const file = new Blob([content], { type: "application/json" });
+  a.href = URL.createObjectURL(file);
+  a.download = name;
+  a.click();
+}
+
+// ====== Event Listeners ======
+document.addEventListener("DOMContentLoaded", loadSettings);
+</script>
+
+
+
+
+
+</body>
+</html>
