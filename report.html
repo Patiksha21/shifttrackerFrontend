@@ -12,11 +12,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
+<<<<<<< HEAD
     <link rel="stylesheet" href="assets/css/style.css">
+=======
+    <link rel="stylesheet" href="assets/style.css">
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
 </head>
 <body>
 
 <div class="container report-container">
+<<<<<<< HEAD
     <div class="row">
 
         <!-- SIDEBAR -->
@@ -154,5 +159,181 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="assets/js/app.js"></script>
+=======
+
+    <!-- TOP BAR -->
+    <div class="d-flex justify-content-end align-items-center top-bar">
+        <div class="time me-4"><i class="fa-regular fa-clock me-1"></i>09:00 AM</div>
+        <button class="btn btn-primary px-4" id="exportBtn">Export</button>
+        <button class="btn btn-primary px-4 ms-2" onclick="goBack()">Home</button>
+    </div>
+
+    <!-- HEADING -->
+    <h3 class="fw-bold mt-3">Reports Summary</h3>
+
+    <!-- SUMMARY CARDS -->
+    <div class="row mt-4 g-3">
+        <div class="col-3">
+            <div class="summary-card">
+                <h4 id="totalLogins">0</h4>
+                <p>Total Logins</p>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="summary-card light-blue">
+                <h4 id="totalShifts">0</h4>
+                <p>Shifts</p>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="summary-card light-yellow">
+                <h4 id="loginLoss">0</h4>
+                <p>Login Loss</p>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="summary-card light-green">
+                <h4 id="overtimeCases">0</h4>
+                <p>Overtime Cases</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE BLOCK -->
+    <div class="table-box mt-4">
+        <h5 class="mb-3">Daily Log</h5>
+
+        <table class="table align-middle" id="reportTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Employee</th>
+                    <th>Login Time</th>
+                    <th>Logout Time</th>
+                    <th>Shift Duration</th>
+                    <th>Idle Time</th>
+                    <th>Alerts</th>
+                </tr>
+            </thead>
+            <tbody id="dailyLogBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const REPORT_URL = "http://localhost:8080/api/reports";
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("You are not logged in");
+    window.location.href = "index.html";
+}
+
+function getAuthHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    };
+}
+
+// ======== LIVE CLOCK ========
+function updateClock() {
+    const clockEl = document.querySelector('.time');
+    const now = new Date();
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    clockEl.innerHTML = `<i class="fa-regular fa-clock me-1"></i>${hours}:${minutes} ${ampm}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ======== HELPER: FORMAT TIME ========
+function formatTime(dateTimeStr) {
+    if (!dateTimeStr) return "—";
+    const dt = new Date(dateTimeStr);
+    let hours = dt.getHours();
+    const minutes = dt.getMinutes();
+    const seconds = dt.getSeconds();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    const mm = minutes < 10 ? "0" + minutes : minutes;
+    const ss = seconds < 10 ? "0" + seconds : seconds;
+    return `${hours}:${mm}:${ss} ${ampm}`;
+}
+
+// ======== HELPER: FORMAT DURATION (hh:mm:ss) ========
+function formatDuration(seconds) {
+    if (!seconds) return "00:00:00";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return `${h.toString().padStart(2,"0")}:${m.toString().padStart(2,"0")}:${s.toString().padStart(2,"0")}`;
+}
+
+// ======== FETCH REPORT DATA ========
+async function loadReport(date = new Date().toISOString().slice(0, 10)) {
+    try {
+        // Fetch summary
+        const summaryRes = await fetch(`${REPORT_URL}/summary?date=${date}`, { headers: getAuthHeaders() });
+        if (!summaryRes.ok) throw new Error("Failed to load summary");
+        const summary = await summaryRes.json();
+
+        document.getElementById("totalLogins").innerText = summary.totalLogins || 0;
+        document.getElementById("totalShifts").innerText = summary.totalShifts || 0;
+        document.getElementById("loginLoss").innerText = summary.loginLoss || 0;
+        document.getElementById("overtimeCases").innerText = summary.overtimeCases || 0;
+
+        // Fetch daily logs
+        const dailyRes = await fetch(`${REPORT_URL}/daily?date=${date}`, { headers: getAuthHeaders() });
+        if (!dailyRes.ok) throw new Error("Failed to load daily logs");
+        const dailyLogs = await dailyRes.json();
+
+        const tbody = document.getElementById("dailyLogBody");
+        tbody.innerHTML = "";
+        dailyLogs.forEach(log => {
+            const alerts = log.overtime ? "⚠ Overtime" : "-";
+            const empInitials = log.employeeName.split(" ").map(n => n[0]).join("").toUpperCase();
+
+            const row = `
+                <tr>
+                    <td>${log.date}</td>
+                    <td><span class="circle-badge">${empInitials}</span> ${log.employeeName}</td>
+                    <td>${formatTime(log.loginTime)}</td>
+                    <td>${formatTime(log.logoutTime)}</td>
+                    <td>${formatDuration(log.shiftDurationSeconds)}</td>
+                    <td>${formatDuration(log.idleTimeSeconds)}</td>
+                    <td>${alerts}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+    } catch (err) {
+        console.error(err);
+        alert("Error loading report: " + err.message);
+    }
+}
+
+// ======== EXPORT TO EXCEL ========
+document.getElementById("exportBtn").addEventListener("click", function () {
+    const table = document.querySelector("#reportTable");
+    const workbook = XLSX.utils.table_to_book(table, { sheet: "Report" });
+    XLSX.writeFile(workbook, "report_summary.xlsx");
+});
+
+// ======== GO BACK ========
+function goBack() {
+    window.location.href = "admin.html";
+}
+
+// INITIAL LOAD
+loadReport();
+</script>
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
 </body>
 </html>

@@ -1,0 +1,322 @@
+/* =====================================================
+   UNIVERSAL & DEFAULTS
+===================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #dfe6f5;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+.page-bg {
+    background: #eff2f8;
+    min-height: 100vh;
+   
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+.sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #dfe2e7 0%, #eeeef0 40%, #e2e4e9 100%);
+    border-right: 1px solid #d3d8e6;
+     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+}
+
+.logo-img {
+    width: 150px;
+    height: auto;
+}
+
+.menu {
+    margin-top: 40px;
+}
+
+.menu-item {
+    width: 90%;
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: #556;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 6px auto;
+    transition: 0.3s;
+}
+
+.menu-item i {
+    margin-right: 10px;
+}
+
+.menu-item:hover {
+    background: rgba(0,0,0,0.05);
+}
+
+.menu-item.active {
+    background: #cdd8f3;
+    color: #000 !important;
+    font-weight: 600;
+}
+
+.menu-item.active i {
+    color: #000 !important;
+}
+
+.settings {
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
+    font-size: 14px;
+    color: #444;
+}
+
+
+/* =====================================================
+   MAIN CONTENT GLOBAL
+===================================================== */
+.col-10 {
+    margin-left: 220px !important;
+    padding: 25px;
+    
+}
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+.top-bar,
+.d-flex.align-items-center.mt-3 {
+    padding-right: 20px;
+    
+}
+
+.time {
+    font-weight: 500;
+    color: #333;
+}
+
+/* =====================================================
+   TABS (All, Online, Offline)
+===================================================== */
+.tabs-container .tab {
+    padding: 7px 20px;
+    border: none;
+    background: #e4e8f3;
+    border-radius: 6px;
+    margin-right: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    
+}
+
+.tabs-container .tab.active {
+    background: #2d66ff;
+    color: #fff;
+}
+
+.green-dot,
+.red-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.green-dot { background: #34c759; }
+.red-dot   { background: #ff3b30; }
+
+
+/* =====================================================
+   TABLE WRAPPER (All Pages)
+===================================================== */
+.table-wrapper {
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #dedede;
+    
+}
+
+/* Scrollbars */
+.table-wrapper::-webkit-scrollbar {
+    height: 7px;
+    width: 7px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #c8cee0;
+    border-radius: 10px;
+}
+
+/* =====================================================
+   MODERN TABLE STYLE
+===================================================== */
+table {
+    min-width: 900px;
+    border-collapse: separate !important;
+    border-spacing: 0 12px !important;
+}
+
+table thead th {
+    background: #f3f3f3;
+    padding: 14px;
+    font-weight: 600;
+    color: #333;
+    border-radius: 8px;
+}
+
+table tbody tr {
+    background: #ffffff;
+    box-shadow: 0px 2px 12px rgba(0,0,0,0.06);
+    border-radius: 10px;
+}
+
+table tbody td {
+    padding: 14px 18px;
+}
+
+table tbody td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+table tbody td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Status Badges */
+.online  { background: #d7ffd7; color: #0a790a; padding: 4px 12px; border-radius: 10px; font-size: 12px; }
+.offline { background: #ffd7d7; color: #b00000; padding: 4px 12px; border-radius: 10px; font-size: 12px; }
+
+
+/* =====================================================
+   TL → EMPLOYEE LIST PAGE
+===================================================== */
+.employee-list {
+    display: none;
+    background: #fafafa;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.employee-item {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+}
+.employee-item:last-child {
+    border-bottom: none;
+}
+
+
+/* =====================================================
+   REPORT PAGE
+===================================================== */
+.report-container {
+    background: white;
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.1);
+}
+
+.summary-card {
+    background: #f8f9ff;
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+.main-wrapper {
+    width: 80%;
+    margin: 40px auto;
+    background: white;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    padding: 40px;
+}
+
+.left-box {
+    padding: 30px 20px;
+}
+
+.title {
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.right-box {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid #e6e6e6;
+    box-shadow: 10px 6px 15px rgba(0,0,0,0.08);
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px 15px 13px 42px;
+    border-radius: 8px;
+    border: 1px solid #d5d5d5;
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: #1ccb6c;
+    border: none;
+    color: white;
+    font-size: 17px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+
+/* =====================================================
+   FILTER PANEL
+===================================================== */
+.filter-panel {
+    position: absolute;
+    top: 95px;
+    right: 30px;
+    width: 260px;
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 25px rgba(0,0,0,0.18);
+    display: none;
+    z-index: 1000;
+}

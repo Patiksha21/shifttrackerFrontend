@@ -12,7 +12,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
+<<<<<<< HEAD
     <link rel="stylesheet" href="assets/css/style.css">
+=======
+    <link rel="stylesheet" href="assets/style.css">
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
 </head>
 <body>
 
@@ -25,6 +29,7 @@
                 <img src="assets/img/kipl.png" class="logo-img" width="200px">
             </div>
             <div class="menu mt-5">
+<<<<<<< HEAD
                 <button class="menu-item " onclick="window.location.href='admin.html'">
                     <i class="fas fa-tachometer-alt"></i>Dashbord
                 </button>
@@ -41,11 +46,29 @@
           <div class="settings" onclick="openSettings()">
     <i class="fa-solid fa-gear me-2"></i> Settings
 </div>
+=======
+                <button class="menu-item" onclick="window.location.href='admin.html'">
+                    <i class="fa-regular fa-circle-dot me-2"></i>Dashbord
+                </button>
+                
+                <button class="menu-item " onclick="window.location.href='submissive.html'">
+                    <i class="fa-regular fa-file me-2"></i>Team Leader
+                </button>
+                <button class="menu-item active" onclick="window.location.href='archive.html'">
+                    <i class="fa-regular fa-folder me-2"></i>History
+                </button>
+            </div>
+
+            <div class="settings" onclick="openSettings()">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+            </div>
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
 
         </div>
 
         <!-- MAIN CONTENT -->
         <div class="col-10">
+<<<<<<< HEAD
             <!-- TOP BAR -->
             <!-- <div class="d-flex justify-content-end align-items-center mt-3 pe-4">
                 <div class="time me-4"><i class="fa-regular fa-clock me-1"></i>09:00 AM</div>
@@ -54,6 +77,9 @@
             </div> -->
 
             <!-- TITLE -->
+=======
+
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
             <h3 class="mt-4 ms-4 fw-bold">Archive – Employee History</h3>
 
             <!-- FILTER BOX -->
@@ -99,9 +125,120 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <script src="assets/js/app.js"></script>
+=======
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+    const BACKEND_URL = "http://localhost:8080";
+    const tableBody = document.querySelector("#archiveTable tbody");
+
+    const token = localStorage.getItem("token"); // ⬅ GET STORED TOKEN
+    if (!token) {
+        alert("Unauthorized! Please login again.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // =============================
+    // FETCH ARCHIVE DATA (WITH JWT)
+    // =============================
+    async function fetchArchiveData(fromDate = '', toDate = '', employeeName = '') {
+        try {
+            let url = `${BACKEND_URL}/api/admin/sessions/archive?`;
+            if(fromDate) url += `fromDate=${fromDate}&`;
+            if(toDate) url += `toDate=${toDate}&`;
+            if(employeeName) url += `employeeName=${encodeURIComponent(employeeName)}&`;
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token   // ⬅ JWT HERE
+                }
+            });
+
+            if(!response.ok) throw new Error("Failed to fetch archive data");
+
+            return await response.json();
+
+        } catch (error) {
+            console.error(error);
+            alert("Error fetching archive data.");
+            return [];
+        }
+    }
+
+    // =============================
+    // RENDER TABLE
+    // =============================
+    function loadArchiveTable(data){
+        tableBody.innerHTML = "";
+
+        if(data.length === 0){
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center">No records found</td></tr>`;
+            return;
+        }
+
+        data.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${row.date}</td>
+                <td>${row.user?.fullName || row.employee}</td>
+                <td>${row.login}</td>
+                <td>${row.logout}</td>
+                <td>${row.duration}</td>
+                <td>
+                  <span class="badge ${row.status === 'Completed' ? 'bg-success' : 'bg-warning'}">
+                    ${row.status}
+                  </span>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // INITIAL LOAD
+    fetchArchiveData().then(loadArchiveTable);
+
+    // FILTER APPLY
+    window.applyArchiveFilter = async function(){
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const name = document.getElementById("filterName").value;
+
+        const filtered = await fetchArchiveData(from, to, name);
+        loadArchiveTable(filtered);
+    };
+
+    // EXPORT TO EXCEL
+    window.exportArchive = function(){
+        const from = document.getElementById("fromDate").value;
+        const to = document.getElementById("toDate").value;
+        const name = document.getElementById("filterName").value;
+
+        let url = `${BACKEND_URL}/api/admin/export/excel?`;
+        if(from) url += `fromDate=${from}&`;
+        if(to) url += `toDate=${to}&`;
+        if(name) url += `employeeName=${encodeURIComponent(name)}&`;
+
+        window.open(url, "_blank");
+    };
+
+});
+
+// OPEN SETTINGS
+function openSettings() {
+    window.location.href = "settings.html";
+}
+</script>
+>>>>>>> 258fc09dca2dfc08045c89e9f8cce02350b6132c
 
 </body>
 </html>
