@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="assets/css/style.css">
+
+    
+</head>
+
+<body>
+
+<div class="container-fluid page-bg">
+  <div class="row">
+
+    <!-- =============== SIDEBAR =============== -->
+    <div class="col-12 col-md-2 sidebar bg-white vh-100 p-3">
+      <div class="logo mt-5 text-center">
+        <img src="assets/img/kipl.png" class="logo-img" width="150px">
+      
+
+      <div class="menu mt-5">
+                <button class="menu-item " onclick="window.location.href='admin.html'">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </button>
+                <button class="menu-item" onclick="window.location.href='submissive.html'">
+                    <i class="fas fa-users-cog"></i>Team Leader
+                </button>
+                 <button class="menu-item" onclick="window.location.href='report.html'">
+                    <i class="fas fa-chart-pie"></i>Report
+                </button>
+                <button class="menu-item" onclick="window.location.href='archive.html'">
+                   <i class="fas fa-history"></i>History
+                </button>
+            </div>
+
+      <div class="settings mt-auto" onclick="openSettings()">
+        <i class="fa-solid fa-gear me-2"></i>Settings
+      </div>
+    </div>
+    </div>
+
+    <!-- =============== SETTINGS CONTENT =============== -->
+    <div class="col-12 col-md-10 p-4 settings-page">
+      <h3 class="mb-4"><i class="fa-solid fa-gear me-2"></i>Settings</h3>
+
+      <div class="settings-box">
+
+        <!-- Profile Settings -->
+        <h5 class="section-title">Profile Settings</h5>
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <label>Name</label>
+            <input type="text" id="setName" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Email</label>
+            <input type="email" id="setEmail" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>New Password</label>
+            <input type="password" id="setPass" class="form-control">
+          </div>
+        </div>
+
+        <!-- Theme Settings -->
+        <h5 class="section-title">Theme Settings</h5>
+        <div class="mb-4">
+          <button class="btn btn-dark me-2" onclick="setTheme('dark')">Dark Mode</button>
+          <button class="btn btn-light border" onclick="setTheme('light')">Light Mode</button>
+        </div>
+
+        <!-- Company Settings -->
+        <h5 class="section-title">Company Settings</h5>
+        <div class="row mb-4">
+          <div class="col-md-4">
+            <label>Company Name</label>
+            <input type="text" id="companyName" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Office Start Time</label>
+            <input type="time" id="startTime" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label>Office End Time</label>
+            <input type="time" id="endTime" class="form-control">
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <h5 class="section-title">Notifications</h5>
+        <div class="mb-4">
+          <input type="checkbox" id="loginNotify"> Login Notification <br>
+          <input type="checkbox" id="offlineNotify"> Offline Notification <br>
+          <input type="checkbox" id="reportNotify"> Report Notification
+        </div>
+
+        <!-- Data Backup -->
+        <h5 class="section-title">Data & Backup</h5>
+        <button class="btn btn-primary me-2" onclick="exportEmployees()">Export Employees</button>
+        <button class="btn btn-primary me-2" onclick="exportLogs()">Export Logs</button>
+        <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="assets/js/app.js"></script>
+
+
+
+
+
+</body>
+</html>

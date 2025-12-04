@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KavyaShift – Reports Summary</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<div class="container report-container">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <div class="col-2 sidebar">
+            <div class="logo mt-5 ms-3">
+                <img src="assets/img/kipl.png" class="logo-img" width="200px">
+            </div>
+
+            <div class="menu mt-5">
+                <button class="menu-item " onclick="window.location.href='admin.html'">
+                    <i class="fas fa-tachometer-alt"></i>Dashbord
+                </button>
+                <button class="menu-item" onclick="window.location.href='submissive.html'">
+                    <i class="fas fa-users-cog"></i>Team Leader
+                </button>
+                 <button class="menu-item active" onclick="window.location.href='report.html'">
+                    <i class="fas fa-chart-pie"></i>Report
+                </button>
+                <button class="menu-item" onclick="window.location.href='archive.html'">
+                   <i class="fas fa-history"></i>History
+                </button>
+            </div>
+
+            <div class="settings" onclick="openSettings()">
+                <i class="fa-solid fa-gear me-2"></i> Settings
+            </div>
+        </div>
+
+    <!-- TOP BAR -->
+    
+
+   <div class="col-10">
+
+            <!-- TOP BAR -->
+            <div class="d-flex justify-content-end align-items-center top-bar">
+                <button class="btn btn-primary px-4">Export</button>
+            </div>
+
+            <!-- HEADING -->
+            <h3 class="fw-bold mt-3">Reports Summary</h3>
+
+            <!-- SUMMARY CARDS -->
+            <div class="row mt-4 g-3">
+                <div class="col-3">
+                    <div class="summary-card">
+                        <h4>155</h4>
+                        <p>Total Logins</p>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="summary-card light-blue">
+                        <h4>5</h4>
+                        <p>Shifts</p>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="summary-card light-yellow">
+                        <h4>5</h4>
+                        <p>Login Loss</p>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="summary-card light-green">
+                        <h4>5</h4>
+                        <p>Overtime Cases</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLE BLOCK -->
+            <div class="table-box mt-4">
+                <h5 class="mb-3">Daily Log</h5>
+
+                <table class="table align-middle" id="reportTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Employee</th>
+                            <th>Login Time</th>
+                            <th>Logout Time</th>
+                            <th>Shift Duration</th>
+                            <th>Idle Time</th>
+                            <th>Alerts</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>Oct 12</td>
+                            <td><span class="circle-badge">JD</span> John Doe</td>
+                            <td>08:12 AM</td>
+                            <td>05:00:17</td>
+                            <td><span class="green-text">09:00:17</span></td>
+                            <td>01:18:08</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Oct 12</td>
+                            <td><span class="circle-badge">SL</span> Sarah Lee</td>
+                            <td>08:10 AM</td>
+                            <td>06:00:14</td>
+                            <td><span class="green-text">09:00:14</span></td>
+                            <td>00:10:45</td>
+                            <td><span class="alert-badge">⚠ Overtime</span></td>
+                        </tr>
+                        <tr>
+                            <td>Oct 12</td>
+                            <td><span class="circle-badge">MC</span> Mark Connor</td>
+                            <td>08:00 AM</td>
+                            <td>04:48:21</td>
+                            <td>01:48:21</td>
+                            <td>04:20:03</td>
+                            <td><span class="alert-badge">⚠ Overtime</span></td>
+                        </tr>
+                        <tr>
+                            <td>Oct 12</td>
+                            <td><span class="circle-badge">ED</span> Emily Davis</td>
+                            <td>08:00 AM</td>
+                            <td>02:30:01</td>
+                            <td>06:30:01</td>
+                            <td>08:40:02</td>
+                            <td><span class="alert-badge">⚠ Overtime</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div><!-- END col-10 -->
+
+    </div><!-- END row -->
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

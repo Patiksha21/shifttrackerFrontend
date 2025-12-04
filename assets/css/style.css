@@ -1,0 +1,515 @@
+/* =====================================================
+   DEFAULTS
+===================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #dfe6f5;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+
+.page-bg {
+    background: #eff2f8;
+    min-height: 100vh;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+.sidebar {
+    height: 100vh;
+    background: linear-gradient(180deg, #dfe2e7 0%, #eeeef0 40%, #e2e4e9 100%);
+    border-right: 1px solid #d3d8e6;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+    padding-top: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+}
+
+.logo-img {
+    width: 150px;
+}
+
+.menu {
+    margin-top: 40px;
+}
+
+.menu-item {
+    width: 90%;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    color: #556;
+    font-size: 16px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 6px auto;
+    transition: 0.3s;
+}
+
+.menu-item i {
+    margin-right: 10px;
+}
+
+.menu-item:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.menu-item.active {
+    background: #cdd8f3;
+    color: #000;
+    font-weight: 600;
+}
+
+.settings {
+    position: absolute;
+    bottom: 20px;
+    left: 25px;
+    font-size: 14px;
+    color: #444;
+}
+
+/* =====================================================
+   MAIN CONTENT GLOBAL
+===================================================== */
+.col-10,
+.report-container,
+.settings-page {
+    margin-left: 220px;
+    padding: 25px;
+}
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+    padding: 10px 20px;
+}
+
+.time {
+    font-weight: 500;
+    color: #333;
+}
+
+/* =====================================================
+   TABS (All / Online / Offline)
+===================================================== */
+.tabs-container .tab {
+    padding: 7px 20px;
+    background: #e4e8f3;
+    border-radius: 6px;
+    margin-right: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+}
+
+.tabs-container .tab.active {
+    background: #1484b0;
+    color: #fff;
+}
+
+.green-dot,
+.red-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.green-dot { background: #34c759; }
+.red-dot   { background: #ff3b30; }
+
+/* =====================================================
+   TABLE WRAPPER + MODERN TABLE
+===================================================== */
+.table-wrapper {
+    max-height: 450px;
+    overflow-y: auto;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #dedede;
+}
+
+/* Scrollbar */
+.table-wrapper::-webkit-scrollbar {
+    width: 7px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #c8cee0;
+    border-radius: 10px;
+}
+
+/* TABLE HEADER */
+.table-wrapper thead tr th {
+    background: linear-gradient(135deg, #24b09c, #5e92e6);
+    color: #fff;
+    padding: 14px 18px;
+    font-weight: 600;
+    border: none;
+}
+
+.table-wrapper thead tr th:first-child {
+    border-top-left-radius: 10px;
+}
+.table-wrapper thead tr th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* TABLE BODY */
+.table-wrapper tbody tr {
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
+.table-wrapper tbody td {
+    padding: 15px 18px;
+}
+
+.table-wrapper tbody td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.table-wrapper tbody td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Status Badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1.5px solid;
+    font-size: 12px;
+}
+
+.status-online {
+    color: #0a790a;
+    border-color: #0a790a;
+}
+
+.status-disconnected {
+    color: #b00000;
+    border-color: #b00000;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.online-dot { background: #0a790a; }
+.disconnected-dot { background: #b00000; }
+
+/* ROLE BADGES */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1.5px solid;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.role-admin { color: #dc3545; border-color: #dc3545; }
+.role-tl { color: #0d6efd; border-color: #0d6efd; }
+.role-employee { color: #198754; border-color: #198754; }
+
+
+/* =====================================================
+   SUMMARY CARDS (REPORT PAGE)
+===================================================== */
+.summary-card {
+    background: #e2eefe;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+}
+/* Alert Badge – Professional Look */
+.alert-badge {
+    background: #ffeded;
+    color: #d93025;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 30px;
+    border: 1px solid #ffb9b9;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Optional: Warning Icon Color */
+.alert-badge i,
+.alert-badge::before {
+    color: #d93025;
+}
+#reportTable thead tr th {
+    background: linear-gradient(135deg, #24b09c, #5e92e6);
+    color: #fff;
+    padding: 14px 18px;
+    font-weight: 600;
+    border: none;
+}
+
+
+.col-10 {
+    margin-left: 16.66%; /* sidebar ला जागा देण्यासाठी */
+    padding: 20px;
+}
+
+/* =====================================================
+   LOGIN PAGE
+===================================================== */
+ 
+
+    /* HEADER */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* padding: 25px 60px; */
+       
+    }  
+     
+    .header img {
+        width: 200px; 
+            
+     
+    }
+
+    .header button {
+        background: #19c37d;
+        border: none;
+        padding: 10px 30px;
+        font-size: 16px;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+    }
+
+    /* MAIN CONTAINER */
+    .container {
+        width: 80%;
+        margin: auto;
+        margin-top: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+        display: flex;
+        padding: 50px;
+        gap: 50px;
+    }
+
+    /* LEFT */
+    .left {
+        width: 50%;
+        padding: 40px 20px;
+    }
+
+    .title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #1d284c;
+        margin-bottom: 10px;
+    }
+
+    .brand {
+        font-size: 45px;
+        font-weight: 600;
+        color: #073369;
+        margin-bottom: 20px;
+    }
+
+    .tag {
+        display: inline-block;
+        background: #dbe6ff;
+        color: #0b63ce;
+        padding: 6px 18px;
+        border-radius: 20px;
+        font-size: 14px;
+        border: 1px solid #bcd3ff;
+        margin-bottom: 50px;
+    }
+
+    .left .footer {
+        font-size: 14px;
+        margin-top: 120px;
+        color: #444;
+    }
+
+    /* RIGHT CARD */
+    .right-card {
+        width: 50%;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.12);
+    }
+
+    .right-card h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: #1f2d50;
+    }
+
+    .right-card p {
+        text-align: center;
+        color: #6c6c6c;
+        margin-bottom: 25px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-box {
+        width: 100%;
+        padding: 14px;
+        margin-bottom: 18px;
+        border-radius: 10px;
+        border: 1px solid #cfd7e4;
+        font-size: 15px;
+        background: #fafafa;
+    }
+
+    .toggle {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .error {
+        color: red;
+        font-size: 13px;
+        height: 14px;
+        margin-top: -10px;
+        margin-bottom: 10px;
+    }
+
+    .forgot {
+        text-align: right;
+        font-size: 14px;
+        color: #0b5de6;
+        cursor: pointer;
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 15px;
+        background: #19c37d;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .loading {
+        text-align: center;
+        color: #19c37d;
+        font-size: 16px;
+        margin-top: 15px;
+        display: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .container {
+            flex-direction: column;
+            width: 90%;
+            padding: 20px;
+        }
+        .left, .right-card {
+            width: 100%;
+        }
+        .header {
+            padding: 20px 25px;
+        }
+        .header img {
+            width: 160px;
+        }
+    }
+
+/* =====================================================
+   SETTINGS PAGE
+===================================================== */
+.settings-page {
+    margin-left: 260px;
+    padding: 30px;
+}
+
+.settings-box {
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #e5e5e5;
+}
+
+/* Dark Theme */
+body[data-theme="dark"] {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+body[data-theme="dark"] .settings-box {
+    background: #2c2c2c;
+    border-color: #555;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media(max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .col-10,
+    .report-container,
+    .settings-page {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .main-wrapper {
+        grid-template-columns: 1fr;
+        width: 95%;
+    }
+}
+

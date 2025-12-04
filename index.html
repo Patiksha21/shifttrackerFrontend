@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KavyaShift — Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+<!-- MAIN BODY -->
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+        <div class="header">
+    <img src="assets/img/kipl.png" alt="logo">
+    <!-- <button>Login</button> -->
+</div>
+        <div class="title">Welcome to</div>
+        <div class="brand">KavyaShift</div>
+
+        <div class="tag">Real-Time Tracking System</div>
+
+        <div class="footer">
+            Developed by: Kavya Infoweb Pvt. Ltd. <br><br>
+            Need Help? Contact Support
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE LOGIN -->
+    <div class="right-card">
+        <h2>Welcome to KavyaShift</h2>
+        <p>Please login to start your shift</p>
+
+        <div class="input-wrapper">
+            <input type="text" id="email" class="input-box" placeholder="Email / User ID">
+            <p class="error" id="email-error"></p>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="password" id="password" class="input-box" placeholder="Password">
+            <span class="toggle" onclick="togglePassword()">👁️</span>
+            <p class="error" id="pass-error"></p>
+        </div>
+
+        <!-- <div class="forgot">Forgot password?</div> -->
+
+        <button class="login-btn" onclick="login()">Login</button>
+        <p id="loading" class="loading"></p>
+    </div>
+
+</div>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>
